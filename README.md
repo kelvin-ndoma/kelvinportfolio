@@ -68,3 +68,6 @@ logs submissions and production shows an email fallback. Secrets stay on the ser
 
 Tip: change the template sign-off from “Aluminium Fabricators Company” to your own name in the
 EmailJS Content editor.
+
+Required for this server-side form: EmailJS → Account → Security → enable
+**Allow API requests from non-browser applications**. Without that, sends return HTTP 403.

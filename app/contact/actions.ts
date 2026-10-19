@@ -49,10 +49,15 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
     await deliverWithEmailJs(parsed.data);
     return { status: "success" };
   } catch (error) {
-    console.error("[contact] delivery failed:", error instanceof Error ? error.message : "unknown error");
+    const detail = error instanceof Error ? error.message : "unknown error";
+    console.error("[contact] delivery failed:", detail);
+    const hint =
+      /EmailJS blocked the server send/i.test(detail)
+        ? detail
+        : `Your message could not be sent right now. Please email ${site.email} directly.`;
     return {
       status: "error",
-      message: `Your message could not be sent right now. Please email ${site.email} directly.`,
+      message: hint,
       fieldErrors: {},
       values,
     };
@@ -80,7 +85,7 @@ function buildTemplateParams(data: ContactInput) {
 
   return {
     from_name: data.name,
-    to_name: process.env.EMAILJS_TO_NAME ?? "Kelvin",
+    to_name: env("EMAILJS_TO_NAME") ?? "Kelvin",
     message: details,
     // Also exposed as top-level params in case the template is expanded later.
     email: data.email,
@@ -90,10 +95,23 @@ function buildTemplateParams(data: ContactInput) {
   };
 }
 
+function env(name: string): string | undefined {
+  const value = process.env[name]?.trim();
+  if (!value) return undefined;
+  // Hosts sometimes store values with surrounding quotes.
+  if (
+    (value.startsWith('"') && value.endsWith('"')) ||
+    (value.startsWith("'") && value.endsWith("'"))
+  ) {
+    return value.slice(1, -1);
+  }
+  return value;
+}
+
 async function deliverWithEmailJs(data: ContactInput) {
-  const serviceId = process.env.EMAILJS_SERVICE_ID;
-  const templateId = process.env.EMAILJS_TEMPLATE_ID;
-  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+  const serviceId = env("EMAILJS_SERVICE_ID");
+  const templateId = env("EMAILJS_TEMPLATE_ID");
+  const publicKey = env("EMAILJS_PUBLIC_KEY");
 
   if (!serviceId || !templateId || !publicKey) {
     if (process.env.NODE_ENV !== "production") {
@@ -115,7 +133,7 @@ async function deliverWithEmailJs(data: ContactInput) {
   };
 
   // Private key keeps the send call server-only (recommended by EmailJS for backends).
-  const privateKey = process.env.EMAILJS_PRIVATE_KEY;
+  const privateKey = env("EMAILJS_PRIVATE_KEY");
   if (privateKey) payload.accessToken = privateKey;
 
   const response = await fetch(EMAILJS_ENDPOINT, {
@@ -126,6 +144,11 @@ async function deliverWithEmailJs(data: ContactInput) {
 
   if (!response.ok) {
     const detail = await response.text().catch(() => "");
+    if (/non-browser/i.test(detail)) {
+      throw new Error(
+        "EmailJS blocked the server send. In EmailJS → Account → Security, enable “Allow API requests from non-browser applications”, then try again.",
+      );
+    }
     throw new Error(`EmailJS ${response.status}${detail ? `: ${detail.slice(0, 200)}` : ""}`);
   }
 }
