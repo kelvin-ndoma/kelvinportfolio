@@ -47,7 +47,7 @@ export type Project = {
 export const projects = [
   {
     slug: "burns-brothers-task-manager",
-    name: "Burns Brothers Task Manager",
+    name: "The Burns Brothers Task Manager",
     category: "Business Workflow Systems",
     group: "Business systems",
     featured: true,

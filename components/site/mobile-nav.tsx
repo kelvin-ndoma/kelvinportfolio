@@ -8,6 +8,7 @@ import { Menu, X } from "lucide-react";
 import { site } from "@/content/site";
 import { cn } from "@/lib/cn";
 import { isActivePath } from "./nav-links";
+import { SignatureMark } from "./signature-mark";
 
 type Item = { readonly href: string; readonly label: string };
 
@@ -28,7 +29,12 @@ export function MobileNav({ items }: { items: readonly Item[] }) {
         <Dialog.Overlay className="fixed inset-0 z-[60] bg-paper/10 backdrop-blur-sm" />
         <Dialog.Content className="fixed inset-0 z-[70] flex flex-col bg-ink px-6 pb-10 outline-none">
           <div className="flex h-[4.5rem] items-center justify-between">
-            <Dialog.Title className="label text-accent">{site.wordmark}</Dialog.Title>
+            <Dialog.Title asChild>
+              <div>
+                <SignatureMark linked={false} size="sm" />
+                <span className="sr-only">{site.brand}</span>
+              </div>
+            </Dialog.Title>
             <Dialog.Close className="inline-flex size-10 items-center justify-center text-paper" aria-label="Close menu">
               <X className="size-5" strokeWidth={1.25} aria-hidden />
             </Dialog.Close>

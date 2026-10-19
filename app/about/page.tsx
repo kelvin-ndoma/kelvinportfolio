@@ -5,6 +5,7 @@ import { getStory } from "@/content/stories";
 import { ButtonLink } from "@/components/ui/button-link";
 import { ContactCta } from "@/components/home/contact-cta";
 import { OrganicLine } from "@/components/motion/organic-line";
+import { Portrait } from "@/components/site/portrait";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata = pageMetadata({
@@ -24,13 +25,27 @@ export default function AboutPage() {
         </h1>
       </section>
 
-      <section className="container-page pb-16 md:pb-24">
-        <div className="grid gap-12 lg:grid-cols-12">
-          <p className="font-display text-[clamp(1.35rem,1.1rem+1.1vw,1.85rem)] font-light leading-snug tracking-tight text-pretty text-paper lg:col-span-7 lg:col-start-5">
-            {aboutNarrative[0]}
-          </p>
+      <section className="container-page relative pb-16 md:pb-24">
+        <OrganicLine
+          variant="section"
+          className="pointer-events-none absolute inset-x-0 top-[42%] z-0 h-16 opacity-30 md:h-20"
+        />
+        <div className="relative z-10 grid items-end gap-14 lg:grid-cols-12 lg:gap-8">
+          <Portrait
+            variant="studio"
+            layout="editorial"
+            priority
+            caption="Kelvin."
+            className="w-full max-w-md lg:col-span-5 lg:max-w-none"
+            sizes="(max-width: 1024px) 100vw, 420px"
+          />
+          <div className="lg:col-span-6 lg:col-start-7 lg:pb-10">
+            <p className="font-display text-[clamp(1.35rem,1.1rem+1.1vw,1.85rem)] font-light leading-snug tracking-tight text-pretty text-paper">
+              {aboutNarrative[0]}
+            </p>
+            <p className="label mt-10 text-subtle">Based in Nairobi · Working remotely</p>
+          </div>
         </div>
-        <OrganicLine variant="section" className="mt-16 opacity-40" />
       </section>
 
       <section aria-labelledby="details-title" className="border-t border-line-soft">

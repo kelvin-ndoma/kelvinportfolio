@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
   partialPrefetching: true,
   pageExtensions: ["ts", "tsx", "mdx"],
   poweredByHeader: false,
+  images: {
+    qualities: [75, 90, 100],
+  },
   turbopack: {
     rules: {
       "*.css": {

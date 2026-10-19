@@ -15,6 +15,7 @@ export const site = {
   url: resolveSiteUrl(),
   headline: "Building better ways to work.",
   intro: "Software Engineering · AI · Automation",
+  tagline: "Build · Automate · Improve",
   description:
     "Kelvin Ndoma Mutua is a full-stack software engineer and AI solutions builder in Nairobi, Kenya, designing business workflow systems, multi-tenant SaaS platforms and AI-assisted applications for international teams.",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "kelvinndomamutua@gmail.com",
@@ -24,14 +25,14 @@ export const site = {
 
 export const navigation = [
   { href: "/work", label: "Work" },
-  { href: "/about", label: "About" },
   { href: "/expertise", label: "Expertise" },
+  { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
 ] as const;
 
 export const whatIDo = [
   {
-    title: "Engineer",
+    title: "Build",
     body: "Full-stack systems shaped around how teams actually work.",
   },
   {
@@ -42,6 +43,14 @@ export const whatIDo = [
     title: "Improve",
     body: "Iterate with the people using it until the process holds.",
   },
+] as const;
+
+/** The Burns Brothers Task Manager — featured home preview cards (verified product areas). */
+export const burnsBrothersPreview = [
+  { label: "Planning", detail: "Monthly work plans" },
+  { label: "Tasks", detail: "Deliverables & progress" },
+  { label: "Team", detail: "Roles & ownership" },
+  { label: "Progress", detail: "Meetings & reports" },
 ] as const;
 
 export const credibility = [

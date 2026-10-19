@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { navigation, site } from "@/content/site";
+import { SignatureMark } from "./signature-mark";
 
 export function SiteFooter() {
   const external = [
@@ -9,11 +10,8 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-line-soft">
-      <div className="container-page flex flex-col gap-10 py-12 md:flex-row md:items-start md:justify-between md:py-16">
-        <div>
-          <p className="label text-accent">{site.wordmark}</p>
-          <p className="mt-3 text-sm font-light text-muted">{site.location}</p>
-        </div>
+      <div className="container-page flex flex-col gap-10 py-14 md:flex-row md:items-start md:justify-between md:py-16">
+        <SignatureMark size="md" variant="full" />
         <nav aria-label="Footer" className="flex flex-wrap gap-x-8 gap-y-3">
           {[...navigation, { href: "/resume", label: "Resume" }].map((item) => (
             <Link

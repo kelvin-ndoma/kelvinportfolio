@@ -14,7 +14,7 @@ const outfit = Outfit({
 });
 
 const greatVibes = Great_Vibes({
-  variable: "--font-signature",
+  variable: "--font-great-vibes",
   subsets: ["latin"],
   display: "swap",
   weight: "400",
@@ -77,7 +77,11 @@ const personJsonLd = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-KE" className={`${outfit.variable} ${jetbrains.variable} antialiased`} suppressHydrationWarning>
+    <html
+      lang="en-KE"
+      className={`${outfit.variable} ${greatVibes.variable} ${jetbrains.variable} antialiased`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>

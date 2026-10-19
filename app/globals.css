@@ -29,6 +29,7 @@
 
   --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-signature: var(--font-great-vibes), "Segoe Script", cursive;
   --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
 
   --text-display: clamp(3.75rem, 1.4rem + 11vw, 10rem);

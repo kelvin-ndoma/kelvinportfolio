@@ -1,49 +1,65 @@
+import Link from "next/link";
 import { site } from "@/content/site";
 import { OrganicLine } from "@/components/motion/organic-line";
 import { Reveal } from "@/components/motion/reveal";
+import { BurnsPreview } from "./burns-preview";
 
 export function Hero() {
   return (
-    <section
-      aria-labelledby="hero-title"
-      className="relative flex min-h-[calc(100dvh-4.5rem)] flex-col justify-between overflow-hidden pb-10 pt-6 md:pb-14 md:pt-10"
-    >
-      <div className="container-page flex items-start justify-between gap-6">
-        <p className="label text-accent">
-          {site.wordmark}
-          <span className="ml-1 opacity-60" aria-hidden>
-            ®
-          </span>
-        </p>
-        <p className="label text-accent">Portfolio / 2026</p>
-      </div>
+    <section aria-labelledby="hero-title" className="relative overflow-hidden pb-16 pt-6 md:pb-24 md:pt-10">
+      <OrganicLine
+        variant="hero"
+        interactive
+        className="pointer-events-none absolute inset-x-0 top-[38%] -z-0 h-[6rem] opacity-50 md:top-[42%] md:h-[8rem]"
+      />
 
-      <div className="container-page relative z-10 mt-20 flex-1 md:mt-16 lg:mt-12">
-        <Reveal reveal="fade" className="relative">
-          <h1
-            id="hero-title"
-            className="relative z-10 max-w-[9ch] font-display text-display font-light tracking-[-0.045em] text-paper"
-          >
-            Kelvin
-            <br />
-            Ndoma.
-          </h1>
-          <p className="label relative z-10 mt-7 text-accent md:mt-8">{site.intro}</p>
-        </Reveal>
+      <div className="container-page relative z-10 grid items-center gap-14 lg:grid-cols-12 lg:gap-8">
+        <div className="lg:col-span-6 xl:col-span-6">
+          <Reveal reveal="fade">
+            <h1
+              id="hero-title"
+              className="max-w-[10ch] font-display text-display font-light tracking-[-0.045em] text-paper"
+            >
+              Kelvin
+              <br />
+              Ndoma.
+            </h1>
 
-        {/* Line weaves through the name block — behind first line, across the composition */}
-        <div className="pointer-events-none absolute inset-x-[-8%] top-[22%] -z-0 md:top-[28%] lg:inset-x-[-12%] lg:top-[32%]">
-          <OrganicLine variant="hero" interactive className="h-[5.5rem] opacity-75 md:h-[7rem]" />
+            <p className="label mt-8 text-accent">{site.intro}</p>
+            <div aria-hidden className="mt-5 h-px w-16 bg-line" />
+
+            <p className="mt-6 max-w-sm text-base font-light tracking-wide text-muted md:text-lg">
+              {site.headline}
+            </p>
+
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-8">
+              <Link
+                href="#selected-work"
+                className="group inline-flex items-center gap-3 text-sm font-light tracking-wide text-paper transition-colors hover:text-accent"
+              >
+                <span
+                  aria-hidden
+                  className="size-2.5 rounded-full bg-accent transition-transform duration-300 group-hover:scale-110"
+                />
+                Explore Selected Work
+                <span aria-hidden className="text-accent">
+                  →
+                </span>
+              </Link>
+              <Link
+                href="/about"
+                className="inline-flex items-center gap-2 text-sm font-light tracking-wide text-muted transition-colors hover:text-accent"
+              >
+                About My Approach
+                <span aria-hidden>→</span>
+              </Link>
+            </div>
+          </Reveal>
         </div>
-      </div>
 
-      <div className="container-page relative z-10 mt-auto flex flex-col gap-5 pt-16 sm:flex-row sm:items-end sm:justify-between md:pt-8">
-        <a href="#selected-work" className="label text-accent transition-opacity hover:opacity-65">
-          Selected work <span aria-hidden>↓</span>
-        </a>
-        <p className="max-w-xs text-sm font-light tracking-wide text-accent sm:text-right">
-          {site.headline}
-        </p>
+        <Reveal delay={0.1} className="lg:col-span-6" reveal="fade">
+          <BurnsPreview />
+        </Reveal>
       </div>
     </section>
   );
