@@ -1,0 +1,70 @@
+## Project overview
+
+The Burns Brothers Task Manager (built under the working name WorkPlan) is an internal operating system for monthly team work planning, progress tracking, meeting presentation, decisions and reporting. It replaces a document-based process with one structured system that the whole team works from.
+
+## Business challenge
+
+Monthly work plans and team meeting updates were prepared in Microsoft Word. Each person kept their own document, and leadership had to piece together who was working on what, how far along it was and where people needed support.
+
+That created familiar problems:
+
+- Assignments and progress lived in separate documents rather than in one shared record.
+- Meeting preparation meant compiling updates by hand, and each person shared their own screen to present.
+- Blockers and decisions raised in meetings were easy to lose once the meeting ended.
+- Reports had to be rebuilt from scratch every month.
+
+## Operational context
+
+The team works across several departments and projects at once, including multiple active client and internal initiatives. Work is reviewed in a recurring monthly team meeting where each person walks through what they completed, what is in progress, what comes next and where they need help.
+
+The existing Word format was well understood, so the new system needed to keep that familiar structure (Goal or Deliverable, Actions Taken, Planned, Support Needed, % Complete) while removing the manual assembly behind it.
+
+## My role and responsibilities
+
+I designed and built the application end to end:
+
+- Mapped the existing monthly planning and meeting process and the information each role needed.
+- Designed the data model, role permissions and meeting workflow.
+- Built the full-stack application, including authentication, reporting and exports.
+- Prepared the deployment configuration and team onboarding flow.
+
+## Solution approach
+
+The central decision was to make the system, not the document, the **source of truth**. Every task belongs to a clear hierarchy: Company, Department, Project, Deliverable, Task, then Activity or Update. The same records then power every view the team needs: personal work plans, team dashboards, meeting slides and monthly reports.
+
+Word-style reports did not disappear. They became an **export** of live data instead of a document someone maintains by hand.
+
+<Capabilities />
+
+## Technical architecture
+
+<Architecture
+  layers={[
+    { name: "Interface", detail: "Next.js App Router with React Server Components by default, Tailwind CSS and shadcn/ui, Kanban board with dnd-kit." },
+    { name: "Mutations", detail: "Server Actions validated with Zod, with role checks enforced on the server for every change." },
+    { name: "Identity", detail: "Auth.js credentials sessions with bcrypt-hashed passwords and role-based landing pages." },
+    { name: "Data", detail: "MongoDB with Mongoose schemas and indexes across the work hierarchy, meetings and decisions." },
+    { name: "Live meetings", detail: "Audience screens poll the meeting's live state, stored on the meeting record so a realtime transport can be added later without a redesign." },
+    { name: "Reports", detail: "DOCX, PDF and CSV exports generated from live records." },
+  ]}
+/>
+
+## Key implementation decisions
+
+- **Permissions in the server, not the interface.** Team members cannot reach admin actions by guessing URLs. Every server action and page loader checks the user's role.
+- **Weighted progress.** Task weight feeds deliverable and project progress, and a person's monthly progress is based on their active work-plan tasks rather than a simple average of historical work.
+- **Polling over WebSockets for live meetings.** A short polling interval keeps audience screens in sync with the host with far less infrastructure, and the design leaves room to add a realtime transport later.
+- **Reports as exports.** The Word-style table is generated on demand and never treated as the record.
+
+## Challenges and trade-offs
+
+The biggest challenge was replacing a familiar process without making people learn a new way of reporting. Keeping the original report columns, and generating the familiar document from live data, let the team keep their meeting format while the underlying record changed completely.
+
+Polling for meeting state is a deliberate trade-off. It is simpler and cheaper to run than a realtime service at the expected meeting size, at the cost of a short delay between the host and audience screens.
+
+## Outcomes and business value
+
+- One shared, structured record of team work replaces individually maintained documents.
+- Monthly and meeting reports are generated from live data instead of assembled manually.
+- Meetings run from a single shared presentation screen. Individual screen sharing is not required.
+- Blockers, decisions and action items are captured as records that persist after the meeting.

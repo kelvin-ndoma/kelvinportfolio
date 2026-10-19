@@ -1,0 +1,70 @@
+## Project overview
+
+Lumdi is a multi-tenant membership and community platform for creators and organizations. Organizations run paid memberships, host live streams, sell in a marketplace, manage events and tickets, and communicate with members from one product.
+
+## Business challenge
+
+Membership organizations usually run on a patchwork of tools: one for applications, another for recurring billing, another for events, plus email, chat and a member directory. Each tool has its own view of a member, and nobody has the full picture.
+
+For organizations in Kenya there is an extra requirement. Card payments alone are not enough, and mobile money has to be a first-class payment option.
+
+## Operational context
+
+The platform serves several audiences at once, each with very different needs:
+
+- **Platform administrators** manage organizations, plans, billing and email domains.
+- **Organization owners and admins** manage settings, billing and their communities.
+- **Community staff** handle applications, members, events and communications.
+- **Members** use a portal for their dashboard, directory, messages, billing and community.
+- **Visitors** browse public community pages, apply and fill in forms.
+
+## My role and responsibilities
+
+I designed and built the platform:
+
+- Designed the multi-tenant architecture and the layered role model.
+- Built membership, application, billing and event workflows.
+- Integrated Stripe, M-Pesa, Resend, Cloudinary, LiveKit, Ably, Upstash Redis and OpenAI.
+- Implemented middleware for authentication, rate limiting and security headers.
+
+## Solution approach
+
+The architecture is built around four layers. A **platform** hosts many **organizations**. Each organization runs one or more communities, called **houses**, which are the main unit for member revenue. Members then use each house's **member portal**.
+
+Every layer has its own roles. Platform administrators are not automatically organization or house administrators, and organization roles do not leak into house permissions. This keeps tenants separated while letting larger organizations run several communities.
+
+<Capabilities />
+
+## Technical architecture
+
+<Architecture
+  layers={[
+    { name: "Application", detail: "Next.js 14 App Router in TypeScript with separate surfaces for platform, organization, house, member portal and public pages." },
+    { name: "Identity", detail: "NextAuth with JWT sessions, and platform, organization and house roles enforced in middleware and route handlers." },
+    { name: "Data", detail: "MongoDB through Prisma, modelling platforms, organizations, houses, plans, memberships, events, tickets and purchases." },
+    { name: "Payments", detail: "Stripe for subscriptions, recurring member billing, one-off charges and Connect payouts; Safaricom Daraja for M-Pesa STK Push." },
+    { name: "Realtime and media", detail: "LiveKit for live streaming, Ably for real-time chat, Cloudinary for media." },
+    { name: "Communications", detail: "Resend with React Email templates and custom sending domains for campaigns and transactional email." },
+    { name: "Protection", detail: "Upstash Redis rate limiting on sensitive routes and security headers on all responses." },
+  ]}
+/>
+
+## Key implementation decisions
+
+- **Houses as the unit of revenue.** Putting plans, applications and billing at house level lets one organization run several communities with different pricing.
+- **Two payment rails.** Stripe handles recurring billing and payouts, while M-Pesa handles one-off payments in Kenyan shillings for tickets, marketplace purchases and initiation fees.
+- **Applications before membership.** An application workflow sits in front of membership, so communities can review, approve, reject or request payment before someone joins.
+- **Audit logs at every level.** Activity is recorded at platform, organization and house level.
+
+## Challenges and trade-offs
+
+The hardest part of a platform like this is the number of permission boundaries. Each new feature has to answer the same question: at which layer does this live, and who can see it? Making that explicit in the data model kept the answer consistent across every product area.
+
+Supporting two payment providers also means two sets of callbacks, failure modes and reconciliation paths. It adds complexity, but it is the difference between a product that works for Kenyan members and one that does not.
+
+## Outcomes and business value
+
+- Organizations can run memberships, events, payments and communications from one platform.
+- Members get a single portal instead of separate logins across tools.
+- Card and M-Pesa payments are both supported.
+- Larger organizations can run several communities with their own plans and staff.

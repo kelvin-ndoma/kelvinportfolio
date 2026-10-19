@@ -1,0 +1,253 @@
+@import "tailwindcss";
+
+/*
+ * Copper Gallery — cream ground, dark display type, copper details.
+ * Inspired by editorial portfolio references; original Kelvin Ndoma identity.
+ * Contrast on --color-ink (#FFF2DF):
+ * paper ≥14:1 · muted/subtle ≥5.5:1 · accent ≥4.5:1 (AA for small text).
+ * --color-line is decorative only.
+ */
+@theme {
+  --color-ink: #fff2df;
+  --color-surface: #ffe9cc;
+  --color-surface-raised: #fff8ed;
+  --color-paper: #241c17;
+  --color-muted: #6e4c35;
+  --color-subtle: #6e4c35;
+  --color-accent: #8f4814;
+  --color-accent-soft: #a8581618;
+  --color-dark: #241c17;
+  --color-line: #b87843;
+  --color-line-soft: #e0c091;
+  --color-danger: #9a3f32;
+  --color-success: #3d6b45;
+
+  --color-project-task: #a85816;
+  --color-project-hq: #8a4a1a;
+  --color-project-lumdi: #805b40;
+  --color-project-automator: #9a6230;
+
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
+
+  --text-display: clamp(3.75rem, 1.4rem + 11vw, 10rem);
+  --text-display--line-height: 0.9;
+  --text-display--letter-spacing: -0.045em;
+  --text-headline: clamp(2rem, 1.15rem + 3.2vw, 4.25rem);
+  --text-headline--line-height: 1.02;
+  --text-headline--letter-spacing: -0.035em;
+  --text-title: clamp(1.35rem, 1.1rem + 1vw, 2rem);
+  --text-title--line-height: 1.2;
+  --text-title--letter-spacing: -0.02em;
+  --text-label: 0.68rem;
+  --text-label--line-height: 1.4;
+  --text-label--letter-spacing: 0.18em;
+
+  --ease-editorial: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-feature-settings: "ss01";
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 78rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 3.5rem;
+    }
+  }
+
+  .label {
+    font-family: var(--font-sans);
+    font-size: var(--text-label);
+    font-weight: 400;
+    line-height: var(--text-label--line-height);
+    letter-spacing: var(--text-label--letter-spacing);
+    text-transform: uppercase;
+  }
+
+  .atmosphere {
+    background-color: var(--color-ink);
+  }
+
+  .motif-stroke {
+    fill: none;
+    stroke: var(--color-line);
+    stroke-width: 1.15;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0.7;
+  }
+
+  .prose-case {
+    color: var(--color-muted);
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.75;
+    counter-reset: case-section;
+  }
+
+  .prose-case > * + * {
+    margin-top: 1.1rem;
+  }
+
+  .prose-case h2 {
+    counter-increment: case-section;
+    margin-top: 3.25rem;
+    padding-top: 1.35rem;
+    border-top: 1px solid var(--color-line-soft);
+    color: var(--color-paper);
+    font-family: var(--font-display);
+    font-size: var(--text-title);
+    line-height: var(--text-title--line-height);
+    letter-spacing: var(--text-title--letter-spacing);
+    font-weight: 300;
+  }
+
+  .prose-case h2::before {
+    content: counter(case-section, decimal-leading-zero);
+    display: block;
+    margin-bottom: 0.65rem;
+    color: var(--color-accent);
+    font-size: var(--text-label);
+    letter-spacing: var(--text-label--letter-spacing);
+    font-weight: 400;
+  }
+
+  .prose-case h2:first-child {
+    margin-top: 0;
+  }
+
+  .prose-case h3 {
+    margin-top: 1.85rem;
+    color: var(--color-paper);
+    font-size: 1.05rem;
+    font-weight: 400;
+  }
+
+  .prose-case strong {
+    color: var(--color-paper);
+    font-weight: 500;
+  }
+
+  .prose-case a {
+    color: var(--color-paper);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-line) 75%, transparent);
+    text-underline-offset: 0.22em;
+  }
+
+  .prose-case ul,
+  .prose-case ol {
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .prose-case li {
+    position: relative;
+    padding-left: 1.35rem;
+  }
+
+  .prose-case li + li {
+    margin-top: 0.5rem;
+  }
+
+  .prose-case ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.85em;
+    width: 0.5rem;
+    height: 1px;
+    background-color: var(--color-line);
+  }
+
+  .prose-case ol {
+    counter-reset: case-list;
+  }
+
+  .prose-case ol > li {
+    counter-increment: case-list;
+  }
+
+  .prose-case ol > li::before {
+    content: counter(case-list);
+    position: absolute;
+    left: 0;
+    color: var(--color-accent);
+    font-size: 0.8rem;
+    line-height: 2.2;
+  }
+
+  .prose-case code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--color-paper);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-line-soft);
+    padding: 0.1em 0.35em;
+  }
+
+  .prose-case blockquote {
+    border-left: 1px solid var(--color-line);
+    padding-left: 1.25rem;
+    color: var(--color-paper);
+    font-size: clamp(1.2rem, 1rem + 0.7vw, 1.5rem);
+    line-height: 1.4;
+    font-weight: 300;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    transition:
+      opacity 0.9s var(--ease-editorial) var(--reveal-delay, 0s),
+      transform 0.9s var(--ease-editorial) var(--reveal-delay, 0s);
+  }
+
+  .js [data-reveal]:not([data-inview]) {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .js [data-reveal="fade"]:not([data-inview]) {
+    transform: none;
+  }
+}

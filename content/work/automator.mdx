@@ -1,0 +1,65 @@
+## Project overview
+
+Automator (working product name Relay) is a multi-tenant SaaS for AI sales employees. A business configures an AI employee with its own approved knowledge, tests it privately, and will then use it to respond to customer enquiries and support its sales process.
+
+The product is **in active development**. This case study describes the foundation that is built and verified today, and is explicit about what is still to come.
+
+## Business challenge
+
+Sales enquiries often arrive when nobody is available to answer them, and slow responses lose customers. AI can help, but a business cannot hand customer conversations to a model without control over:
+
+- what the AI is allowed to know and say,
+- who in the business can change its configuration,
+- how much it is allowed to cost, and
+- how its data is kept separate from every other customer's.
+
+## Operational context
+
+Each customer is a business with its own team, currency, locale and time zone. Within a business, owners and admins configure the AI employee, while other members may only need to read its setup. Across all businesses, a platform operator needs oversight of tenants, accounts and usage without bypassing tenant boundaries.
+
+## My role and responsibilities
+
+I am designing and building the product:
+
+- Product scope, milestones and architecture.
+- Multi-tenant data model, authentication and authorization.
+- AI employee configuration, knowledge and the private test chat.
+- Usage limits, audit trails, the platform control center and automated tests.
+
+## Solution approach
+
+The product is built in **verified vertical slices**. A module counts as complete only when its interface, backend, persistence, authorization and tests are all in place, and anything less is tracked as partial.
+
+The AI is constrained by design. Each AI employee answers from **approved business knowledge**, and owners and admins test it in a **private test chat** before anything is customer-facing. Model responses use **structured outputs**, so the application validates what comes back instead of trusting free text.
+
+<Capabilities />
+
+## Technical architecture
+
+<Architecture
+  layers={[
+    { name: "Application", detail: "Next.js 16 App Router, React 19, strict TypeScript, Tailwind CSS and accessible Radix UI primitives." },
+    { name: "Structure", detail: "Modular monolith: pages and actions, session verification, organization services, server-only repositories, then MongoDB." },
+    { name: "Identity", detail: "Better Auth with database-checked sessions, origin checks and database-backed rate limits on authentication." },
+    { name: "Tenancy", detail: "Every shared collection carries an organization ID; every read resolves an active membership before returning data." },
+    { name: "AI", detail: "OpenAI Responses API with structured outputs, called server-side only, with per-organization daily request and token ceilings." },
+    { name: "Quality", detail: "Vitest unit and integration tests and Playwright browser tests against a disposable local MongoDB replica set." },
+  ]}
+/>
+
+## Key implementation decisions
+
+- **Client claims never grant access.** Slugs, cookies and client-selected organization IDs never establish authority. Access is always resolved from the database.
+- **Transactions for tenant creation.** An organization, its owner membership and its creation audit event are committed together, or not at all.
+- **Usage budgets before cost.** Daily request and token ceilings are reserved before a model call, and duplicate submissions cannot call the provider twice.
+- **A separate platform role.** Platform administration is a singleton grant, independent of organization roles, and every platform read checks it.
+
+## Challenges and trade-offs
+
+The main trade-off is speed against trust. Building tenant isolation, auditing and usage controls before public chat slows the first customer-facing release, but these are the guarantees a business needs before letting an AI talk to its customers, and they are much harder to add afterwards.
+
+## Current status and next steps
+
+Built and verified: workspaces, memberships and roles; business settings; AI employee configuration with approved knowledge; the private test chat; usage limits; audit events; and the platform control center.
+
+Next, in milestone order: the embeddable website chat widget, lead capture and qualification, the conversations inbox with human takeover, CRM pipelines, follow-up automation, and quotations and appointments.

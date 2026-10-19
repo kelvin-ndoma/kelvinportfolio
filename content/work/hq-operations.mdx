@@ -1,0 +1,74 @@
+## Project overview
+
+HQ Operations is an internal operating system for a private-events business. It keeps the full journey from enquiry to closeout in one place: who owns it, what happens next, whether a space is free, what was quoted, what was paid and what the event still needs.
+
+## Business challenge
+
+Running private events involves many hand-offs. A single booking moves from an enquiry through site visits, quotations, negotiation, deposits, event preparation and final reconciliation, and it touches sales, operations, finance and event staff along the way.
+
+When that journey is tracked across separate tools, the questions that matter most become hard to answer quickly:
+
+- Who owns this enquiry, and what is the next step?
+- Is the space still free, or is someone holding it?
+- Which version of the quote did the client see, and has it expired?
+- Has the deposit been paid, and can the booking be confirmed?
+- Who approved the discount, the refund or the exception?
+
+## Operational context
+
+Commercial policy in this kind of business changes over time: deposit rules, how long a space can be held, how long a quote is valid, tax, payment methods and the services on offer. Hard-coding any of these would make the system wrong the first time the business changed its policy.
+
+Different roles also need different views. Leadership, operations leads, sales and event coordinators, event staff, finance and administrators each carry part of the process.
+
+## My role and responsibilities
+
+I designed and built the platform end to end:
+
+- Modelled the enquiry-to-closeout lifecycle as explicit states and transitions.
+- Turned commercial and operational policy into configurable business rules.
+- Designed the approval workflow and the role and permission model.
+- Built the application, automation, public enquiry intake and automated tests.
+
+## Solution approach
+
+The platform treats each stage of the business as an explicit **state machine**. Enquiries move through New, Contacted, Qualified, Site Visit, Quote Sent, Negotiation, Deposit Pending and Confirmed, with Lost, Cancelled and Postponed as defined exits. Quotations, bookings and events each have their own lifecycle.
+
+Commercial policy lives in **settings, not code**. Deposit percentage, hold length, quote validity, tax, payment methods, spaces, services and automation timings are all configuration. The application does not assume any particular deposit rule.
+
+Exceptions go through **approvals**. Discounts above a threshold, confirming without a deposit, refunds, prices below the minimum, procurement above a threshold, inventory write-offs and hold extensions all require approval before they take effect.
+
+<Capabilities />
+
+## Technical architecture
+
+<Architecture
+  layers={[
+    { name: "Interface", detail: "Next.js App Router with Radix UI primitives, React Hook Form, a drag-and-drop pipeline and Recharts reporting." },
+    { name: "Domain", detail: "Pure TypeScript modules for states, money, approvals, permissions and settings, tested independently of the database." },
+    { name: "Services", detail: "Server-side services for CRM, commercial, events, inventory, approvals and proposals, each guarded by permission checks." },
+    { name: "Data", detail: "MongoDB with Mongoose, using transactions on a replica set so multi-document updates stay atomic." },
+    { name: "Automation", detail: "Event-driven follow-up tasks and notifications, plus a sweep that releases expired holds." },
+    { name: "Public intake", detail: "Public enquiry form and tokenised client proposal links, protected by captcha verification and rate limiting." },
+  ]}
+/>
+
+## Key implementation decisions
+
+- **Money as integer cents.** All amounts are stored as integer cents to avoid floating-point errors in quotes, deposits and tax.
+- **Contribution is not profit.** Event contribution is defined as agreed revenue minus direct costs, and labelled that way, so nobody reads it as company profit.
+- **Idempotent automation.** Each automated follow-up task carries a unique automation key, so retries and repeated events never create duplicate work.
+- **Separate development data.** The demo seed refuses to run in production, and the first production administrator is created through a dedicated bootstrap path.
+
+## Challenges and trade-offs
+
+The main challenge was flexibility without ambiguity. Making every commercial rule configurable means the system must still behave predictably when a setting is missing or changes mid-process. The answer was explicit domain types and tests around the rules, rather than defaults hidden in the interface.
+
+Transactions require MongoDB to run as a replica set. That adds a small operational requirement, but it is what keeps a booking, its payment and its audit trail consistent.
+
+## Outcomes and business value
+
+- One operational record per event, from first enquiry to closeout.
+- Ownership and next steps are visible to every role that needs them.
+- Space holds release automatically instead of blocking availability indefinitely.
+- Business policy can change through settings without a code change.
+- Exceptions are approved and recorded instead of handled informally.
