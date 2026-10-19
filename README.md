@@ -9,7 +9,7 @@ Radix UI, Motion, Lucide and MDX. No database, authentication or CMS: content li
 
 ```bash
 npm install
-cp .env.example .env.local   # optional for local development
+# fill in .env (EmailJS + contact details), then:
 npm run dev
 ```
 
@@ -54,5 +54,17 @@ Rules the content follows, enforced in part by `tests/content.test.ts`:
 ## Contact form
 
 Server action in `app/contact/actions.ts`: Zod validation, honeypot field, minimum fill time,
-per-IP rate limit (in memory, per instance) and delivery through Resend. Without `RESEND_API_KEY`,
-development logs submissions and production shows an email fallback. No keys reach the client.
+per-IP rate limit (in memory, per instance) and delivery through [EmailJS](https://www.emailjs.com).
+
+EmailJS template variables (match the dashboard template):
+
+- `{{from_name}}` — visitor name (also used in the subject)
+- `{{to_name}}` — salutation (defaults to `Kelvin` via `EMAILJS_TO_NAME`)
+- `{{message}}` — body including email, topic, organization, and their message
+
+Set `EMAILJS_SERVICE_ID`, `EMAILJS_TEMPLATE_ID` and `EMAILJS_PUBLIC_KEY` (plus optional
+`EMAILJS_PRIVATE_KEY` for server-only sends) in `.env`. Without those keys, development
+logs submissions and production shows an email fallback. Secrets stay on the server.
+
+Tip: change the template sign-off from “Aluminium Fabricators Company” to your own name in the
+EmailJS Content editor.

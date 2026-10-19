@@ -107,8 +107,8 @@ await page.getByLabel("Email").fill("visitor@example.org");
 await page.getByLabel("What is it about?").selectOption("Technology project");
 await page.getByLabel("Message").fill("This is an automated audit message checking the contact form.");
 await page.getByRole("button", { name: "Send message" }).click();
-// Without RESEND_API_KEY a production server reports a delivery error with an email fallback;
-// with it, the success state appears. Either is a handled outcome; a validation error is not.
+// Without EmailJS env vars a production server reports a delivery error with an email fallback;
+// with them, the success state appears. Either is a handled outcome; a validation error is not.
 const outcome = page.locator('main [role="status"] h2, form [role="alert"]').filter({ hasNotText: "highlighted" }).first();
 await outcome.waitFor({ timeout: 15000 });
 const outcomeText = (await outcome.innerText()).split("\n")[0];
